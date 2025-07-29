@@ -283,7 +283,7 @@ visible_activities(QueryKey, Query, Arguments, DepId, Context) ->
         end,
         z_depcache:memo(
             fun() -> z_db:q(Query, Arguments, Context) end,
-            QueryKey,
+            {QueryKey, DepId},
             3600,
             [DepId],
             Context
@@ -300,7 +300,7 @@ visible_activities_objects(QueryKey, Query, Arguments, DepId, Context) ->
         end,
         z_depcache:memo(
             fun() -> z_db:q(Query, Arguments, Context) end,
-            QueryKey,
+            {QueryKey, DepId},
             3600,
             [DepId],
             Context
@@ -340,6 +340,7 @@ clear_inbox(ActivityId, Context) ->
 ) -> {ok, m_rsc:resource_id()} | {error, term()}.
 register(<<"activity", _Rest/binary>> = ActivityCategory, Options, Context) ->
     Actor = proplists:get_value(actor, Options, z_acl:user(Context)),
+    Title = proplists:get_value(title, Options, <<"Registered Activity">>),
     Objects = find_options(object, Options),
     Targets = find_options(target, Options),
     Results = find_options(result, Options),
@@ -353,7 +354,7 @@ register(<<"activity", _Rest/binary>> = ActivityCategory, Options, Context) ->
     % NOTE: the creation of the edges cannot be tested with the 'admin' account
     % see: 'm_rsc_update:insert_edges'
     Props = #{
-        <<"title">> => <<"Registered Activity">>,
+        <<"title">> => Title,
         <<"category_id">> => ActivityCategory,
         <<"is_unfindable">> => true,
         <<"is_published">> => true,
