@@ -1,0 +1,16 @@
+%% -*- mode: erlang -*-
+[
+  % Convenience endpoint for Activity Streams 2.0
+  {rdf_activitystreams, ["rdf", "activitystreams", id], controller_rdf, [{ontology, activitystreams}, {serialization, activitystreams}, {namespace, activitystreams}]},
+
+  % Convenience endpoint for ActivityPub
+  {rdf_activitypub, ["rdf", "activitypub", id], controller_rdf, [{ontology, activitypub}, {serialization, activitypub}, {namespace, activitystreams}]},
+
+  % ActivityPub special collection endpoint(s)
+  {activitypub_user_collection, ["activitypub", collection], controller_activitypub, []},
+  {activitypub_collection, ["activitypub", id, collection], controller_activitypub, []},
+
+  % ActivityPub admin view
+  {admin_activitypub,  ["admin", "activitypub", id], controller_admin, [{template, "admin_activitypub.tpl"}, seo_noindex]},
+  {admin_activitypub_collection,  ["admin", "activitypub", id, collection], controller_admin, [{template, "admin_activitypub_collection.tpl"}, seo_noindex]}
+].
