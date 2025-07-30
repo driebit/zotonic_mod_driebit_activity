@@ -15,7 +15,7 @@
 ]).
 
 -include_lib("zotonic_core/include/zotonic.hrl").
--include("zotonic_mod_driebit_rdf/include/driebit_rdf.hrl").
+-include_lib("zotonic_mod_driebit_rdf/include/driebit_rdf.hrl").
 
 resource_exists(Context) ->
     ContextQs = z_context:ensure_qs(Context),

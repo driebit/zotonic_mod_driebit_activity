@@ -16,7 +16,7 @@
 -behaviour(zotonic_observer).
 -include_lib("zotonic_core/include/zotonic.hrl").
 -include_lib("zotonic_mod_admin/include/admin_menu.hrl").
--include("zotonic_mod_driebit_rdf/include/driebit_rdf.hrl").
+-include_lib("zotonic_mod_driebit_rdf/include/driebit_rdf.hrl").
 
 -export([
     manage_schema/2,
