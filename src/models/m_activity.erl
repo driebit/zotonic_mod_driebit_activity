@@ -22,8 +22,13 @@
 
     clear_inbox/1,
     clear_inbox/2,
-    register/3
+    register/3,
+    find/2,
+    find/3
 ]).
+
+% Copied from 'z_search'
+-define(SEARCH_ALL_LIMIT, 30000).
 
 % EVENTS
 
@@ -339,8 +344,11 @@ clear_inbox(ActivityId, Context) ->
     z:context()
 ) -> {ok, m_rsc:resource_id()} | {error, term()}.
 register(<<"activity", _Rest/binary>> = ActivityCategory, Options, Context) ->
-    Actor = proplists:get_value(actor, Options, z_acl:user(Context)),
     Title = proplists:get_value(title, Options, <<"Registered Activity">>),
+    Actors = case find_options(actor, Options) of
+        [] -> [z_acl:user(Context)];
+        ActorList -> ActorList
+    end,
     Objects = find_options(object, Options),
     Targets = find_options(target, Options),
     Results = find_options(result, Options),
@@ -359,7 +367,7 @@ register(<<"activity", _Rest/binary>> = ActivityCategory, Options, Context) ->
         <<"is_unfindable">> => true,
         <<"is_published">> => true,
         <<"o">> => #{
-            <<"has_activity_actor">> => Actor,
+            <<"has_activity_actor">> => Actors,
             <<"has_activity_object">> => Objects,
             <<"has_activity_target">> => Targets,
             <<"has_activity_result">> => Results,
@@ -388,3 +396,61 @@ find_options(OptionName, Options) ->
         end,
         Options
     ).
+
+
+%% @doc Like 'find/3', but looking for any type of activity.
+-spec find(list(), z:context()) -> {ok, m_rsc:resource_id()} | {error, term()}.
+find(Options, Context) -> find(<<"activity">>, Options, Context).
+
+
+%% @doc Find published activities that match all the given option constraints
+%% (at the same time), sorted by most recently modified.
+%% The available options are the same as the ones for 'register'.
+-spec find(
+    binary() | atom(),
+    list(),
+    z:context()
+) -> {ok, m_rsc:resource_id()} | {error, term()}.
+find(<<"activity", _Rest/binary>> = ActivityCategory, Options, Context) ->
+    Actors = case find_options(actor, Options) of
+        [] -> [z_acl:user(Context)];
+        ActorList -> ActorList
+    end,
+    Objects = find_options(object, Options),
+    Targets = find_options(target, Options),
+    Results = find_options(result, Options),
+    Origins = find_options(origin, Options),
+    Instruments = find_options(instrument, Options),
+    AudienceTo = find_options(to, Options),
+    AudienceBto = find_options(bto, Options),
+    AudienceCc = find_options(cc, Options),
+    AudienceBcc = find_options(bcc, Options),
+
+    #search_result{result = SearchResult} = z_search:search(
+        <<"query">>,
+        #{
+            <<"cat">> => ActivityCategory,
+            <<"is_published">> => true,
+            <<"sort">> => <<"-rsc.modified">>,
+            <<"hasobject">> =>
+                [[ObjId, <<"has_activity_actor">>] || ObjId <- Actors] ++
+                [[ObjId, <<"has_activity_object">>] || ObjId <- Objects] ++
+                [[ObjId, <<"has_activity_target">>] || ObjId <- Targets] ++
+                [[ObjId, <<"has_activity_result">>] || ObjId <- Results] ++
+                [[ObjId, <<"has_activity_origin">>] || ObjId <- Origins] ++
+                [[ObjId, <<"has_activity_instrument">>] || ObjId <- Instruments] ++
+                [[ObjId, <<"has_activity_audience_to">>] || ObjId <- AudienceTo] ++
+                [[ObjId, <<"has_activity_audience_bto">>] || ObjId <- AudienceBto] ++
+                [[ObjId, <<"has_activity_audience_cc">>] || ObjId <- AudienceCc] ++
+                [[ObjId, <<"has_activity_audience_bcc">>] || ObjId <- AudienceBcc]
+        },
+        1,
+        ?SEARCH_ALL_LIMIT,
+        #{},
+        Context
+    ),
+    SearchResult;
+find(ActivityCategory, Options, Context) when is_atom(ActivityCategory) ->
+    find(z_convert:to_binary(ActivityCategory), Options, Context);
+find(ActivityCategory, Options, Context) when is_binary(ActivityCategory) ->
+    find(<<"activity_", ActivityCategory/binary>>, Options, Context).
