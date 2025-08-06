@@ -161,7 +161,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#actor">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#actor">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_object,
                 [
@@ -169,7 +169,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#object">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#object">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_target,
                 [
@@ -177,7 +177,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#target">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#target">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_result,
                 [
@@ -185,7 +185,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#result">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#result">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_origin,
                 [
@@ -193,7 +193,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#origin">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#origin">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_instrument,
                 [
@@ -201,7 +201,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#instrument">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#instrument">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_audience_to,
                 [
@@ -209,7 +209,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#to">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#to">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_audience_bto,
                 [
@@ -217,7 +217,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#bto">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#bto">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_audience_cc,
                 [
@@ -225,7 +225,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#cc">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#cc">>}
                 ],
-                []
+                [{activity, undefined}]
             },
             {has_activity_audience_bcc,
                 [
@@ -233,7 +233,7 @@ manage_schema(install, _Context) ->
                     {uri, <<"https://www.w3.org/ns/activitystreams#bcc">>},
                     {website, <<"https://www.w3.org/ns/activitystreams#bcc">>}
                 ],
-                []
+                [{activity, undefined}]
             }
         ],
         resources = [],
