@@ -184,7 +184,7 @@ property_to_rdf(RscId, _Category, <<"date_end">>, Value, Context) ->
 property_to_rdf(RscId, _Category, <<"creator_id">>, CreatorId, Context) ->
     {ok, rdf_utils:resolve_triple(
         RscId,
-        namespaced_iri(endTime),
+        namespaced_iri(attributedTo),
         CreatorId,
         Context
     )};
