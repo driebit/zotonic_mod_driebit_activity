@@ -14,7 +14,7 @@
 manage_schema(install, _Context) ->
     #datamodel{
         categories = [
-            {activity, undefined, [
+            {activity, meta, [
                 {title, <<"Activity">>},
                 {website, <<"https://www.w3.org/ns/activitystreams#Activity">>}
             ]},
